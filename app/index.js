@@ -1,6 +1,5 @@
-// src/App.js
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Button, FlatList, StyleSheet } from "react-native";
+import { View, Text, TextInput, Button, FlatList, StyleSheet, Alert } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { addTodo, toggleTodoCompletion, deleteTodo, loadTodos } from "../services/slice/todoSlice";
 import { Provider } from "react-redux";
@@ -17,10 +16,20 @@ const TodoApp = () => {
   }, [dispatch]);
 
   const handleAddTodo = () => {
-    if (text.trim()) {
-      dispatch(addTodo(text));
-      setText("");
+    const trimmedText = text.trim();
+
+    if (trimmedText === "") {
+      Alert.alert("Validation Error", "Task cannot be empty!");
+      return;
     }
+
+    if (trimmedText.length > 50) {
+      Alert.alert("Validation Error", "Task must be under 50 characters!");
+      return;
+    }
+
+    dispatch(addTodo(trimmedText));
+    setText("");
   };
 
   return (
